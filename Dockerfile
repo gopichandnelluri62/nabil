@@ -1,5 +1,3 @@
-# Dockerfile
-
 # Use an official lightweight Python image
 FROM python:3.11-slim
 
@@ -7,13 +5,13 @@ FROM python:3.11-slim
 WORKDIR /app
 
 # Copy the dependencies file and install them
-# This is done first to leverage Docker's layer caching
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy the rest of the application code
 COPY . .
 
-# Set the command to run the application using gunicorn
-# Gunicorn is a professional-grade web server
-CMD ["gunicorn", "--bind", "0.0.0.0:8080", "main:app"]
+# Cloud Run injects the PORT environment variable.
+# Your application must listen on this port.
+# We modify the gunicorn command to use this variable.
+CMD exec gunicorn --bind :$PORT --workers 1 --threads 8 "main:app"
