@@ -4,7 +4,7 @@
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
 #
-#     http://www.apache.org/licenses/LICENSE-2.0
+#       http://www.apache.org/licenses/LICENSE-2.0
 #
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
@@ -17,8 +17,9 @@ from google.adk.agents import Agent
 from dotenv import load_dotenv
 
 # Import the refactored tool and the enhanced prompt for BigQuery
-from . import tools
-from .prompt import BIGQUERY_PROMPT 
+# The relative import has been changed to an absolute import.
+import tools
+import prompt
 
 # Load environment variables from the .env file
 load_dotenv()
@@ -36,7 +37,7 @@ root_agent = Agent(
     name="bigquery_agent",
     model=ROOT_AGENT_MODEL,
     description="An agent that understands questions about a BigQuery database, generates SQL, executes it, and provides answers.", # Updated description
-    instruction=BIGQUERY_PROMPT, 
+    instruction=prompt.BIGQUERY_PROMPT,
     tools=[
         tools.query_bigquery,
     ],
