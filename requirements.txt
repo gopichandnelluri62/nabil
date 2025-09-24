@@ -7,3 +7,4 @@ ipykernel
 python-dotenv
 google-cloud-bigquery
 Flask
+gunicorn

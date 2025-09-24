@@ -17,16 +17,16 @@
         <div id="chat-history" class="h-96 overflow-y-auto mb-4 p-4 border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-gray-700">
             <div class="flex items-start mb-4">
                 <div class="bg-blue-500 text-white rounded-xl p-3 shadow-md">
-                    Hello! I am Dixie, an AI recruiting assistant. How can I help you find talent today?
+                    Hello! I am Dixie, an AI recruiting assistant. To get started, please enter your Cloud Run Service URL in the box below.
                 </div>
             </div>
         </div>
 
         <!-- Input Form -->
         <div class="flex items-center space-x-2">
-            <input type="text" id="user-input" placeholder="Type your message..." class="flex-grow p-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-900">
+            <input type="text" id="user-input" placeholder="Type your Cloud Run URL or message..." class="flex-grow p-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-900">
             <button id="send-button" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-6 rounded-lg transition duration-200 ease-in-out">
-                Send
+                Connect
             </button>
         </div>
         
@@ -36,6 +36,7 @@
         const chatHistory = document.getElementById('chat-history');
         const userInput = document.getElementById('user-input');
         const sendButton = document.getElementById('send-button');
+        let cloudRunUrl = null;
 
         // Function to create a message bubble
         function addMessage(text, isUser) {
@@ -52,9 +53,20 @@
         }
 
         async function sendMessage() {
-            const query = userInput.value.trim();
-            if (!query) return;
+            const input = userInput.value.trim();
+            if (!input) return;
 
+            if (!cloudRunUrl) {
+                // First, connect to the URL
+                cloudRunUrl = input;
+                addMessage(`Connecting to: ${cloudRunUrl}`, true);
+                addMessage("Connected! You can now send messages to the agent.", false);
+                sendButton.textContent = "Send";
+                userInput.value = "";
+                return;
+            }
+
+            const query = input;
             addMessage(query, true); // Add user's message to chat
             userInput.value = ''; // Clear input field
 
@@ -63,18 +75,7 @@
             const thinkingMessage = chatHistory.lastChild.querySelector('div');
             
             try {
-                // The URL of your local server. For Cloud Run, this would be the public URL.
-                const apiUrl = 'http://localhost:8080/agent';
-                
-                // Get your actual Cloud Run URL from the console and replace the line below
-                const cloudRunUrl = prompt("Please enter your Cloud Run Service URL:", "https://your-cloud-run-service.run.app");
                 const apiPath = '/agent';
-
-                if (!cloudRunUrl) {
-                    chatHistory.removeChild(chatHistory.lastChild);
-                    addMessage("You must enter a Cloud Run Service URL to connect to the agent.", false);
-                    return;
-                }
 
                 const response = await fetch(cloudRunUrl + apiPath, {
                     method: 'POST',
