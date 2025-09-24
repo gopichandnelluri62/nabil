@@ -54,9 +54,12 @@ def home():
     return jsonify({"status": "ok", "message": "Dixie Agent is up and running!"})
 
 # The following is a placeholder for your main agent endpoint.
-@app.route("/agent", methods=["POST"])
+@app.route("/agent", methods=["GET", "POST"])
 def agent_handler():
     """Placeholder for the main agent logic."""
+    if request.method == "GET":
+        return jsonify({"message": "This is the agent endpoint. Please use a POST request with a JSON body."})
+    
     try:
         user_input = request.json.get("query")
         if not user_input:
