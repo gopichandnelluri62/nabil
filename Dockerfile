@@ -8,11 +8,17 @@ WORKDIR /app
 COPY requirements.txt .
 
 # Install any needed packages specified in requirements
+# This command is often run in a single layer to make sure it's a single unit
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy the rest of the application code into the container
 COPY . .
 
+# Ensure gunicorn is in the path
+# You can add a step to make sure the bin folder is in the PATH
+# Or, you can use the absolute path to gunicorn
+# For python:3.12-slim, the executable should be at /usr/local/bin/gunicorn
+
 # Set the command to run the application using gunicorn
 # The command 'agent:app' assumes your main file is 'agent.py' and your app object is named 'app'
-CMD exec gunicorn --bind :$PORT --workers 1 --threads 8 "agent:app"
+CMD ["/usr/local/bin/gunicorn", "--bind", "0.0.0.0:$PORT", "--workers", "1", "--threads", "8", "agent:app"]
