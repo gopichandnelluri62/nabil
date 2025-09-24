@@ -173,7 +173,7 @@ def agent_handler():
             return jsonify({"error": "Missing 'query' field in request"}), 400
 
         # Pass the query to the root agent and get a response.
-        response_data = root_agent.ask(user_query)
+        response_data = root_agent.generate_response(user_query)
         response_text = response_data.text
 
         return jsonify({"response": response_text, "status": "ok"})
