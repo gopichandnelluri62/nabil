@@ -65,8 +65,18 @@
             try {
                 // The URL of your local server. For Cloud Run, this would be the public URL.
                 const apiUrl = 'http://localhost:8080/agent';
+                
+                // Get your actual Cloud Run URL from the console and replace the line below
+                const cloudRunUrl = prompt("Please enter your Cloud Run Service URL:", "https://your-cloud-run-service.run.app");
+                const apiPath = '/agent';
 
-                const response = await fetch(apiUrl, {
+                if (!cloudRunUrl) {
+                    chatHistory.removeChild(chatHistory.lastChild);
+                    addMessage("You must enter a Cloud Run Service URL to connect to the agent.", false);
+                    return;
+                }
+
+                const response = await fetch(cloudRunUrl + apiPath, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
