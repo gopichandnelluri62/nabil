@@ -6,3 +6,4 @@ pyyaml
 ipykernel
 python-dotenv
 google-cloud-bigquery
+Flask
