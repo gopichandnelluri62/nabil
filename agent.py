@@ -15,9 +15,9 @@
 import os
 from google.adk.agents import Agent
 from dotenv import load_dotenv
+from flask import Flask, jsonify, request
 
 # Import the refactored tool and the enhanced prompt for BigQuery
-# The relative import has been changed to an absolute import.
 import tools
 import prompt
 
@@ -42,3 +42,29 @@ root_agent = Agent(
         tools.query_bigquery,
     ],
 )
+
+# --- Web Server Definition (REQUIRED BY GUNICORN) ---
+# This is the application object that Gunicorn will serve.
+# We're creating a basic Flask app as the entry point.
+app = Flask(__name__)
+
+@app.route("/", methods=["GET"])
+def home():
+    """A simple health check endpoint to confirm the service is running."""
+    return jsonify({"status": "ok", "message": "Dixie Agent is up and running!"})
+
+# The following is a placeholder for your main agent endpoint.
+@app.route("/agent", methods=["POST"])
+def agent_handler():
+    """Placeholder for the main agent logic."""
+    try:
+        user_input = request.json.get("query")
+        if not user_input:
+            return jsonify({"error": "Missing 'query' field in request body."}), 400
+
+        # --- Your agent processing logic would go here ---
+        # For now, we'll return a simple response.
+        return jsonify({"response": f"Received your query: '{user_input}'. Agent logic is not yet implemented."})
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
