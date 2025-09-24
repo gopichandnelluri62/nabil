@@ -172,8 +172,9 @@ def agent_handler():
         if not user_query:
             return jsonify({"error": "Missing 'query' field in request"}), 400
 
-        # Placeholder for the ADK agent logic
-        response_text = f"Received your query: '{user_query}'. Agent logic is not yet implemented."
+        # Pass the query to the root agent and get a response.
+        response_data = root_agent.ask(user_query)
+        response_text = response_data.text
 
         return jsonify({"response": response_text, "status": "ok"})
 
