@@ -1,7 +1,7 @@
 steps:
   # Step 1: Build the Docker image
   - name: 'gcr.io/cloud-builders/docker'
-    dir: 'Dixie_Agent' # <-- This is the crucial line to add
+    # No 'dir' field is needed here because Dockerfile is at the root
     args: ['build', '-t', 'gcr.io/$PROJECT_ID/my-app', '.']
 
   # Step 2: Push the built Docker image to Google Container Registry (GCR)
